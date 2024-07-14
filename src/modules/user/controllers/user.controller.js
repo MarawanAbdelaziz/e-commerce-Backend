@@ -4,6 +4,7 @@ import userModel from "../../../../DB/models/uesrModel.js";
 import bcrypt from "bcrypt";
 import sendMail from "../../../services/sendEmail.js";
 import { customAlphabet } from "nanoid";
+import { createUserValidation } from "../user.validation.js";
 
 export const createUser = async (req, res, next) => {
   try {
@@ -23,7 +24,7 @@ export const createUser = async (req, res, next) => {
 
     const user = await userModel.create(req.body);
 
-    return res.status(201).json({ user: user });
+    return res.status(201).json({ user: "data" });
   } catch (error) {
     res.status(500).json({ message: "server error", error: error.message });
   }
