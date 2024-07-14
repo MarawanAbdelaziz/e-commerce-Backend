@@ -1,10 +1,8 @@
 import jwt from "jsonwebtoken";
 import userModel from "../../../../DB/models/uesrModel.js";
-
 import bcrypt from "bcrypt";
 import sendMail from "../../../services/sendEmail.js";
 import { customAlphabet } from "nanoid";
-import { createUserValidation } from "../user.validation.js";
 
 export const createUser = async (req, res, next) => {
   try {
@@ -181,17 +179,23 @@ export const forgetPassword = async (req, res, next) => {
 };
 
 export const allAccountsHaveSpecificRecoveryEmail = async (req, res, next) => {
-  const { recoveryEmail } = req.body;
+  try {
+    const { recoveryEmail } = req.body;
 
-  if (!recoveryEmail) {
-    return res.status(404).json({ message: "give me your recovery email" });
+    if (!recoveryEmail) {
+      return res.status(404).json({ message: "give me your recovery email" });
+    }
+
+    const findUsers = await userModel.find({ recoveryEmail });
+
+    if (!findUsers) {
+      return res
+        .status(404)
+        .json({ message: "your recovery email not correct" });
+    }
+
+    res.json({ users: findUsers });
+  } catch (error) {
+    res.status(500).json({ message: "server error", error: error.message });
   }
-
-  const findUsers = await userModel.find({ recoveryEmail });
-
-  if (!findUsers) {
-    return res.status(404).json({ message: "your recovery email not correct" });
-  }
-
-  res.json({ users: findUsers });
 };
