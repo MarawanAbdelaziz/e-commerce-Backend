@@ -22,7 +22,7 @@ export const createUser = async (req, res, next) => {
 
     const user = await userModel.create(req.body);
 
-    return res.status(201).json({ user: "data" });
+    return res.status(201).json({ user: user });
   } catch (error) {
     res.status(500).json({ message: "server error", error: error.message });
   }

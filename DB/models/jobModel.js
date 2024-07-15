@@ -1,7 +1,7 @@
 import mongoose, { Types } from "mongoose";
 const { Schema, model } = mongoose;
 
-const applicationSchema = new Schema({
+const jobSchema = new Schema({
   jobTitle: {
     type: String,
     required: true,
@@ -50,6 +50,6 @@ const applicationSchema = new Schema({
   },
 });
 
-const applicationModel = model("application", applicationSchema);
+const jobModel = model("job", jobSchema);
 
-export default applicationModel;
+export default jobModel;

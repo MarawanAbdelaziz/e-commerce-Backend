@@ -8,8 +8,8 @@ const bootstrap = (app, express) => {
   app.use(express.json());
 
   app.use("/user", userRouter);
+  app.use("/company", companyRouter);
   app.use("/job", jobRouter);
-  app.use("/user", companyRouter);
 };
 
 export default bootstrap;

@@ -46,8 +46,6 @@ export const COFPV = joi.object({
   email: joi.string().email().required(),
 });
 
-//
-
 export const forgetPasswordValidation = joi.object({
   email: joi.string().email().required(),
   password: joi.string().required(),
