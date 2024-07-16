@@ -16,6 +16,6 @@ companyRouter.get("/getCompany/:id", auth, companyHR, CC.getCompany);
 companyRouter.get("/searchByCompanyName", CC.searchByCompanyName);
 
 // Get all applications for specific Job
-companyRouter.get("/", CC.GAAFSJ);
+companyRouter.get("/applicationsForSpecificJob/:id", auth, companyHR,  CC.GAAFSJ);
 
 export default companyRouter;

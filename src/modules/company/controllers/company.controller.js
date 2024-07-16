@@ -1,6 +1,8 @@
+import { application } from "express";
 import companyModel from "../../../../DB/models/companyModel.js";
 import jobModel from "../../../../DB/models/jobModel.js";
 import userModel from "../../../../DB/models/uesrModel.js";
+import applicationModel from "../../../../DB/models/applicationModel.js";
 
 export const addCompany = async (req, res) => {
   try {
@@ -137,4 +139,22 @@ export const searchByCompanyName = async (req, res) => {
 };
 
 // Get all applications for specific Job
-export const GAAFSJ = (req, res) => {};
+export const GAAFSJ = async (req, res) => {
+  const userId = req.user._id;
+  const _id = req.params.id;
+  const jobId = req.body.jobId;
+
+  const findCompany = await companyModel.findById({ _id });
+
+  if (!findCompany) {
+    return res.status(400).json({ message: "Company not exist" });
+  }
+
+  if (userId.toString() != findCompany.companyHR.toString()) {
+    return res.status(400).json({ message: "you are not the owner" });
+  }
+
+  const findJop = await applicationModel.find({ jobId });
+
+  return res.json({ applications: findJop });
+};
