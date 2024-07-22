@@ -4,13 +4,13 @@ import jobModel from "../../../../DB/models/jobModel.js";
 import userModel from "../../../../DB/models/uesrModel.js";
 import asyncHandler from "../../../middleware/asyncHandler.js";
 
-export const addJob = asyncHandler(async (req, res) => {
+export const addJob = asyncHandler(async (req, res, next) => {
   const userId = req.user._id;
 
   const findCompany = await companyModel.findOne({ companyHR: userId });
 
   if (!findCompany) {
-    return res.status(400).json({ message: "This HR doesn't have a company" });
+    return next(new Error("This HR doesn't have a company", { cause: 404 }));
   }
 
   req.body.addedBy = userId;
@@ -19,14 +19,14 @@ export const addJob = asyncHandler(async (req, res) => {
   return res.status(201).json({ job });
 });
 
-export const updateJob = asyncHandler(async (req, res) => {
+export const updateJob = asyncHandler(async (req, res, next) => {
   const userId = req.user._id;
   const _id = req.params.id;
 
   const findCompany = await companyModel.findOne({ companyHR: userId });
 
   if (!findCompany) {
-    return res.status(400).json({ message: "This HR doesn't have a company" });
+    return next(new Error("This HR doesn't have a company", { cause: 404 }));
   }
 
   await jobModel.findByIdAndUpdate({ _id }, req.body);
@@ -34,14 +34,14 @@ export const updateJob = asyncHandler(async (req, res) => {
   return res.status(201).json({ message: "Job updated" });
 });
 
-export const deleteJob = asyncHandler(async (req, res) => {
+export const deleteJob = asyncHandler(async (req, res, next) => {
   const userId = req.user._id;
   const _id = req.params.id;
 
   const findCompany = await companyModel.findOne({ companyHR: userId });
 
   if (!findCompany) {
-    return res.status(400).json({ message: "This HR doesn't have a company" });
+    return next(new Error("This HR doesn't have a company", { cause: 404 }));
   }
 
   await jobModel.findByIdAndDelete({ _id });
@@ -49,7 +49,7 @@ export const deleteJob = asyncHandler(async (req, res) => {
   return res.status(201).json({ message: "Job deleted" });
 });
 
-export const allJobs = asyncHandler(async (req, res) => {
+export const allJobs = asyncHandler(async (req, res, next) => {
   const jobs = [];
   const findjobs = await jobModel.find().populate("addedBy");
 
@@ -66,13 +66,13 @@ export const allJobs = asyncHandler(async (req, res) => {
   res.json({ jobs });
 });
 
-export const JobsForSpecificCmpany = asyncHandler(async (req, res) => {
+export const JobsForSpecificCmpany = asyncHandler(async (req, res, next) => {
   const companyName = req.query.companyName;
 
   const findCompany = await companyModel.findOne({ companyName });
 
   if (!findCompany) {
-    return res.status(404).json({ message: "This HR doesn't have a company" });
+    return next(new Error("This HR doesn't have a company", { cause: 404 }));
   }
 
   const findJobs = await jobModel.find({
@@ -80,9 +80,11 @@ export const JobsForSpecificCmpany = asyncHandler(async (req, res) => {
   });
 
   if (!findJobs) {
-    return res
-      .status(404)
-      .json({ message: "There are no jobs for this company at this time" });
+    return next(
+      new Error("There are no jobs for this company at this time", {
+        cause: 404,
+      })
+    );
   }
 
   res.json({ jobs: findJobs });
@@ -118,9 +120,7 @@ export const ApplyToJob = asyncHandler(async (req, res) => {
   const findUser = await userModel.findById({ _id });
 
   if (findUser.role == "company_HR") {
-    return res
-      .status(400)
-      .json({ message: "get out Noooow you are not a user" });
+    return next(new Error("get out Noooow you are not a user"));
   }
 
   req.body.userResume = req.file.path;

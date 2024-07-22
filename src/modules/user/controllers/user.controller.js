@@ -12,9 +12,9 @@ export const createUser = asyncHandler(async (req, res, next) => {
   const findUser2MobileNumber = await userModel.findOne({ mobileNumber });
 
   if (findUserEmail || findUser2MobileNumber) {
-    return res
-      .status(409)
-      .json({ message: "This user already exist or your mobile number" });
+    return next(
+      new Error("This user already exist or your mobile number", { cause: 409 })
+    );
   }
 
   req.body.username = firstName + " " + lastName;
@@ -29,10 +29,10 @@ export const login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   const findUser = await userModel.findOne({ email });
   if (!findUser) {
-    return res.status(400).json({ message: "Account or password incorrect" });
+    return next(new Error("Account or password incorrect"));
   }
   if (!bcrypt.compareSync(password, findUser.password)) {
-    return res.status(400).json({ message: "Account or password incorrect" });
+    return next(new Error("Account or password incorrect"));
   }
 
   await userModel.updateMany({ _id: findUser._id }, { status: "online" });
@@ -49,9 +49,9 @@ export const updateUser = asyncHandler(async (req, res, next) => {
   const findUser2MobileNumber = await userModel.findOne({ mobileNumber });
 
   if (findUserEmail || findUser2MobileNumber) {
-    return res
-      .status(409)
-      .json({ message: "This user already exist or your mobile number" });
+    return next(
+      new Error("This user already exist or your mobile number", { cause: 409 })
+    );
   }
 
   const updateUser = await userModel.updateMany(
@@ -95,13 +95,13 @@ export const createOtpForgetPassword = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
 
   if (!email) {
-    return res.status(404).json({ message: "give me your email" });
+    return next(new Error("give me your email", { cause: 404 }));
   }
 
   const findUser = await userModel.findOne({ email });
 
   if (!findUser) {
-    return res.status(404).json({ message: "your Email not correct" });
+    return next(new Error("your Email not correct", { cause: 404 }));
   }
 
   const nanoid = customAlphabet("0123456789MEROmero", 6);
@@ -128,11 +128,11 @@ export const forgetPassword = asyncHandler(async (req, res, next) => {
   const findUser = await userModel.findOne({ email });
 
   if (!findUser) {
-    return res.status(404).json({ message: "your Email not correct" });
+    return next(new Error("your Email not correct", { cause: 404 }));
   }
 
   if (!bcrypt.compareSync(otp, findUser.otp)) {
-    return res.status(404).json({ message: "your OTP not correct" });
+    return next(new Error("your OTP not correct", { cause: 404 }));
   }
 
   req.body.newPassword = bcrypt.hashSync(newPassword, 4);
@@ -150,15 +150,15 @@ export const allAccountsHaveSpecificRecoveryEmail = asyncHandler(
     const { recoveryEmail } = req.body;
 
     if (!recoveryEmail) {
-      return res.status(404).json({ message: "give me your recovery email" });
+      return next(new Error("give me your recovery email", { cause: 404 }));
     }
 
     const findUsers = await userModel.find({ recoveryEmail });
 
     if (!findUsers) {
-      return res
-        .status(404)
-        .json({ message: "your recovery email not correct" });
+      return next(
+        new Error("gyour recovery email not correct", { cause: 404 })
+      );
     }
 
     res.json({ users: findUsers });
