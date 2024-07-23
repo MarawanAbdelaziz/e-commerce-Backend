@@ -10,6 +10,16 @@ const bootstrap = (app, express) => {
   app.use("/user", userRouter);
   app.use("/company", companyRouter);
   app.use("/job", jobRouter);
+
+  app.use("*", (req, res, next) => {
+    next(new Error(`inValid url: ${req.originalUrl}`, { cause: 404 }));
+  });
+
+  app.use((error, req, res, next) =>
+    res
+      .status(error.cause || 400)
+      .json({ msg: "Catch error", error: error.message })
+  );
 };
 
 export default bootstrap;
