@@ -14,6 +14,10 @@ const bootstrap = (app, express) => {
   app.use("/category", categoryRouter);
   app.use("/brand", brandRouter);
 
+  app.use("/home", (req, res, next) => {
+    res.json({ hi: "hi" });
+  });
+
   app.use("*", (req, res, next) => {
     next(new Error(`inValid url: ${req.originalUrl}`, { cause: 404 }));
   });
