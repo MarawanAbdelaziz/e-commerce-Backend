@@ -1,12 +1,5 @@
 import swaggerJSDoc from "swagger-jsdoc";
 
-import { fileURLToPath } from "url";
-import { dirname, resolve } from "path";
-
-// Polyfill for __dirname in ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -17,21 +10,24 @@ const options = {
     },
     servers: [
       {
-        url: "https://e-commerce-backend-u1r5.vercel.app/",
+        url: "https://e-commerce-backend-coral.vercel.app/",
       },
       {
         url: "http://localhost:3000/",
       },
     ],
   },
-  apis: [
-    resolve(__dirname, "../modules/category/category.routes.js"),
-    resolve(__dirname, "../modules/brand/brand.routes.js"),
-    resolve(__dirname, "../modules/subCategory/subCategory.routes.js"),
-    resolve(__dirname, "../modules/product/product.routes.js"),
-  ],
+  apis: ["src/**/*.js"],
 };
 
 const swaggerSpecs = swaggerJSDoc(options);
 
 export default swaggerSpecs;
+
+// info: {
+//   title: "Library API",
+//   version: "1.0.0",
+//   description: "A simple Express Library API",
+//   termsOfService: "http://example.com/terms/",
+
+// },

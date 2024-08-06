@@ -6,14 +6,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerSpecs from "./swagger/swaggerConfig.js";
 
 const bootstrap = (app, express) => {
-  const CSS_URL =
-    "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
-
-  app.use(
-    "/api-docs",
-    swaggerUi.serve,
-    swaggerUi.setup(swaggerSpecs, { customCssUrl: CSS_URL })
-  );
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
   connectDB();
   app.use(express.json());
