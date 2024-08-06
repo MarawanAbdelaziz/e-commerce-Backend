@@ -17,7 +17,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:3000/",
+        url: "https://e-commerce-backend-u1r5.vercel.app/",
       },
     ],
   },
