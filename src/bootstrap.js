@@ -8,6 +8,8 @@ import swaggerSpecs from "./swagger/swaggerConfig.js";
 const bootstrap = (app, express) => {
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
+  app.use('/static', express.static('public'))
+
   connectDB();
   app.use(express.json());
 
