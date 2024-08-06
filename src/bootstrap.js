@@ -1,15 +1,18 @@
 import connectDB from "../DB/DBConnection.js";
-import companyRouter from "./modules/company/company.routes.js";
-import jobRouter from "./modules/job/job.routes.js";
-import userRouter from "./modules/user/user.routes.js";
+import brandRouter from "./modules/brand/brand.routes.js";
+import categoryRouter from "./modules/category/category.routes.js";
+
+import swaggerUi from "swagger-ui-express";
+import swaggerSpecs from "./swagger/swaggerConfig.js";
 
 const bootstrap = (app, express) => {
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+
   connectDB();
   app.use(express.json());
 
-  app.use("/user", userRouter);
-  app.use("/company", companyRouter);
-  app.use("/job", jobRouter);
+  app.use("/category", categoryRouter);
+  app.use("/brand", brandRouter);
 
   app.use("*", (req, res, next) => {
     next(new Error(`inValid url: ${req.originalUrl}`, { cause: 404 }));

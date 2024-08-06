@@ -1,4 +1,3 @@
-import { ref, string } from "joi";
 import mongoose, { Types } from "mongoose";
 const { Schema, model } = mongoose;
 
@@ -36,4 +35,4 @@ const brandSchema = new Schema(
 
 const brandModel = model("brand", brandSchema);
 
-export default brandModel;
+export default brandModel; 
