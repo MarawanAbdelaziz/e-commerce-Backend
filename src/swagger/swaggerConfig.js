@@ -19,6 +19,9 @@ const options = {
       {
         url: "https://e-commerce-backend-u1r5.vercel.app/",
       },
+      {
+        url: "http://localhost:3000/",
+      },
     ],
   },
   apis: [
