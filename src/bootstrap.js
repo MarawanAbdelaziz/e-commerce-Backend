@@ -2,13 +2,7 @@ import connectDB from "../DB/DBConnection.js";
 import brandRouter from "./modules/brand/brand.routes.js";
 import categoryRouter from "./modules/category/category.routes.js";
 
-import swaggerUi from "swagger-ui-express";
-import swaggerSpecs from "./swagger/swaggerConfig.js";
-
 const bootstrap = (app, express) => {
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
-
-  app.use('/static', express.static('public'))
 
   connectDB();
   app.use(express.json());
