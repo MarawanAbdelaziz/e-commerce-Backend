@@ -24,10 +24,3 @@ const swaggerSpecs = swaggerJSDoc(options);
 
 export default swaggerSpecs;
 
-// info: {
-//   title: "Library API",
-//   version: "1.0.0",
-//   description: "A simple Express Library API",
-//   termsOfService: "http://example.com/terms/",
-
-// },
