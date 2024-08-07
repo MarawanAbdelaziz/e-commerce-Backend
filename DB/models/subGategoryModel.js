@@ -1,4 +1,3 @@
-import { ref, string } from "joi";
 import mongoose, { Types } from "mongoose";
 const { Schema, model } = mongoose;
 
@@ -19,9 +18,9 @@ const subCategorySchema = new Schema(
     },
     image: String,
     category: {
-      type: mongoose.Types.ObjectId,
+      type:  mongoose.Types.ObjectId,
       ref: "category",
-      required: [true,'category is required'],
+      required: [true, "category is required"],
     },
     createdBy: {
       type: mongoose.Types.ObjectId,

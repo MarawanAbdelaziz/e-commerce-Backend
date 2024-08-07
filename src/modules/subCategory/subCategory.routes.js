@@ -6,9 +6,9 @@ const subCategoryRouter = express.Router();
 
 subCategoryRouter
   .post("/", SC.addSubCategory)
-  .get("/allProducts", SC.getAllSubCategories)
-  .get("/", SC.getSubCategory)
-  .put("/", SC.updateSubCategory)
-  .delete("/", SC.deleteSubCategory);
+  .get("/allSubCategories", SC.getAllSubCategories)
+  .get("/:slug", SC.getSubCategory)
+  .put("/:slug", SC.updateSubCategory)
+  .delete("/:slug", SC.deleteSubCategory);
 
 export default subCategoryRouter;
