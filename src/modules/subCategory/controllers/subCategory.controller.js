@@ -1,15 +1,29 @@
 import slug from "slug";
 import subCategoryModel from "../../../../DB/models/subGategoryModel.js";
 import asyncHandler from "../../../middleware/asyncHandler.js";
+import categoryModel from "../../../../DB/models/categoryModel.js";
+import fs from "fs";
 
 export const addSubCategory = asyncHandler(async (req, res, next) => {
   const findSubCategory = await subCategoryModel.findOne({
     name: req.body.name,
   });
+  const findCategory = await categoryModel.findById({
+    _id: req.body.category,
+  });
+
   if (findSubCategory) {
     return next(new Error("This subCategory name already exist"));
   }
+  if (!findCategory) {
+    return next(
+      new Error("there is no category, please try again", { cause: 404 })
+    );
+  }
+
   req.body.slug = slug(req.body.name);
+  req.file.path && (req.body.image = req.file.path);
+
   const subCategory = await subCategoryModel.create(req.body);
 
   res.status(201).json({ subCategory });
@@ -44,16 +58,27 @@ export const updateSubCategory = asyncHandler(async (req, res, next) => {
   const { name } = req.body;
 
   const findSubCategory = await subCategoryModel.findOne({ name });
+  const findCategory = await categoryModel.findById({
+    _id: req.body.category,
+  });
+
   if (findSubCategory) {
     return next(new Error("This name is already taken"));
   }
+  if (!findCategory) {
+    return next(
+      new Error("there is no category, please try again", { cause: 404 })
+    );
+  }
 
   name && (req.body.slug = slug(name));
+  req.file.path && (req.body.image = req.file.path);
 
   const subCategory = await subCategoryModel.findOneAndUpdate(
     { slug: slugName },
     req.body
   );
+  req.file.path && fs.unlink(category.image, () => {});
 
   if (!subCategory) {
     return next(

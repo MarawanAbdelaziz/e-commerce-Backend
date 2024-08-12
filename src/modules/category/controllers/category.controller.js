@@ -1,13 +1,18 @@
 import slug from "slug";
 import categoryModel from "../../../../DB/models/categoryModel.js";
 import asyncHandler from "../../../middleware/asyncHandler.js";
+import fs from "fs";
 
 export const addCategory = asyncHandler(async (req, res, next) => {
   const findCategory = await categoryModel.findOne({ name: req.body.name });
   if (findCategory) {
     return next(new Error("This category name already exist"));
   }
+  console.log(req.body.name);
+
   req.body.slug = slug(req.body.name);
+  req.file.path && (req.body.image = req.file.path);
+
   const category = await categoryModel.create(req.body);
 
   res.status(201).json({ category });
@@ -44,12 +49,15 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
     return next(new Error("This name is already taken"));
   }
 
-  req.body.slug = slug(name);
+  name && (req.body.slug = slug(name));
+  req.file.path && (req.body.image = req.file.path);
 
   const category = await categoryModel.findOneAndUpdate(
     { slug: slugName.toLowerCase() },
     req.body
   );
+
+  req.file.path && fs.unlink(category.image, () => {});
 
   if (!category) {
     return next(
@@ -57,7 +65,7 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
     );
   }
 
-  res.json({ Message: "updated" });
+  res.json({ Message: "updated", category });
 });
 
 export const deleteCategory = asyncHandler(async (req, res, next) => {

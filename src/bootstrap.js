@@ -1,6 +1,7 @@
 import connectDB from "../DB/DBConnection.js";
 import brandRouter from "./modules/brand/brand.routes.js";
 import categoryRouter from "./modules/category/category.routes.js";
+import productRouter from "./modules/product/product.routes.js";
 import subCategoryRouter from "./modules/subCategory/subCategory.routes.js";
 
 const bootstrap = (app, express) => {
@@ -10,6 +11,7 @@ const bootstrap = (app, express) => {
   app.use("/category", categoryRouter);
   app.use("/brand", brandRouter);
   app.use("/subCategory", subCategoryRouter);
+  app.use("/product", productRouter);
 
   app.use("*", (req, res, next) => {
     next(new Error(`inValid url: ${req.originalUrl}`, { cause: 404 }));

@@ -1,6 +1,7 @@
 import slug from "slug";
 import brandModel from "../../../../DB/models/brandModel.js";
 import asyncHandler from "../../../middleware/asyncHandler.js";
+import fs from "fs";
 
 export const addBrand = asyncHandler(async (req, res, next) => {
   const findBrand = await brandModel.findOne({ name: req.body.name });
@@ -8,6 +9,8 @@ export const addBrand = asyncHandler(async (req, res, next) => {
     return next(new Error("This brand name already exist"));
   }
   req.body.slug = slug(req.body.name);
+  req.file.path && (req.body.image = req.file.path);
+
   const brand = await brandModel.create(req.body);
 
   res.status(201).json({ brand });
@@ -45,8 +48,11 @@ export const updateBrand = asyncHandler(async (req, res, next) => {
   }
 
   req.body.slug = slug(name);
+  req.file.path && (req.body.image = req.file.path);
 
   const brand = await brandModel.findOneAndUpdate({ slug: slugName }, req.body);
+
+  req.file.path && fs.unlink(category.image, () => {});
 
   if (!brand) {
     return next(new Error("there is no brand with this name", { cause: 404 }));

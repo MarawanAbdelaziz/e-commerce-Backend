@@ -1,4 +1,3 @@
-import { ref, string } from "joi";
 import mongoose, { Types } from "mongoose";
 const { Schema, model } = mongoose;
 
