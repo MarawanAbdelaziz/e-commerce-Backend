@@ -1,9 +1,9 @@
 import slug from "slug";
-import productModel from "../../../../DB/models/productModel.js";
-import asyncHandler from "../../../middleware/asyncHandler.js";
-import categoryModel from "../../../../DB/models/categoryModel.js";
-import brandModel from "../../../../DB/models/brandModel.js";
-import subCategoryModel from "../../../../DB/models/subGategoryModel.js";
+import productModel from "../../../DB/models/productModel.js";
+import asyncHandler from "../../middleware/asyncHandler.js";
+import categoryModel from "../../../DB/models/categoryModel.js";
+import brandModel from "../../../DB/models/brandModel.js";
+import subCategoryModel from "../../../DB/models/subGategoryModel.js";
 import fs from "fs";
 
 export const addProduct = asyncHandler(async (req, res, next) => {

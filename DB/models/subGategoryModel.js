@@ -16,9 +16,8 @@ const subCategorySchema = new Schema(
       type: String,
       required: true,
     },
-    image: String,
     category: {
-      type:  mongoose.Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "category",
       required: [true, "category is required"],
     },

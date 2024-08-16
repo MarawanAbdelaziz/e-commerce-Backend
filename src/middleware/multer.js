@@ -14,7 +14,7 @@ export const validExtension = {
   audio: ["audio/mpeg", "audio/wav", "audio/ogg"],
 };
 
-const multerLoacl = (customValidation, customPath) => {
+export const multerLocal = (customValidation, customPath) => {
   const allpath = path.resolve(`uploads/${customPath}`);
   if (!fs.existsSync(allpath)) {
     fs.mkdirSync(allpath, { recursive: true });
@@ -36,12 +36,25 @@ const multerLoacl = (customValidation, customPath) => {
       return cb(null, true);
     }
 
-    cb(new Error("png or jpg only!"), false);
+    cb(new Error("invalid file type: png or jpg only!"), false);
+  };
+
+  const upload = multer({ fileFilter, storage });
+  return upload;
+};
+
+export const multerHost = (customValidation) => {
+  const storage = multer.diskStorage({});
+
+  const fileFilter = (req, file, cb) => {
+    if (customValidation.includes(file.mimetype)) {
+      return cb(null, true);
+    }
+
+    cb(new Error("invalid file type: png or jpg only!"), false);
   };
 
   const upload = multer({ fileFilter, storage });
 
   return upload;
 };
-
-export default multerLoacl;

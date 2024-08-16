@@ -1,7 +1,8 @@
 import slug from "slug";
-import brandModel from "../../../../DB/models/brandModel.js";
-import asyncHandler from "../../../middleware/asyncHandler.js";
+import brandModel from "../../../DB/models/brandModel.js";
+import asyncHandler from "../../middleware/asyncHandler.js";
 import fs from "fs";
+import cloudinary from "../../utils/cloudinary.js";
 
 export const addBrand = asyncHandler(async (req, res, next) => {
   const findBrand = await brandModel.findOne({ name: req.body.name });
@@ -9,7 +10,15 @@ export const addBrand = asyncHandler(async (req, res, next) => {
     return next(new Error("This brand name already exist"));
   }
   req.body.slug = slug(req.body.name);
-  req.file.path && (req.body.image = req.file.path);
+
+  const { public_id, secure_url } = await cloudinary.uploader.upload(
+    req.file.path,
+    {
+      folder: "brand",
+    }
+  );
+
+  req.file.path && (req.body.image = { public_id, secure_url });
 
   const brand = await brandModel.create(req.body);
 

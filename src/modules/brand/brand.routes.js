@@ -1,15 +1,19 @@
 import express from "express";
 
-import * as BC from "./controllers/brand.controller.js";
-import multerLoacl, { validExtension } from "../../services/multerLocal.js";
+import * as BC from "./brand.controller.js";
+import { multerHost, validExtension } from "../../middleware/multer.js";
 
 const brandRouter = express.Router();
 
 brandRouter
-  .post("/", multerLoacl(validExtension.image,'brand').single("image"), BC.addBrand)
-  .get("/allBrands", BC.getAllBrands)
+  .post("/", multerHost(validExtension.image).single("image"), BC.addBrand)
+  .get("/", BC.getAllBrands)
   .get("/:slug", BC.getBrand)
-  .put("/:slug", multerLoacl(validExtension.image,'brand').single("image"), BC.updateBrand)
+  .put(
+    "/:slug",
+    multerHost(validExtension.image).single("image"),
+    BC.updateBrand
+  )
   .delete("/:slug", BC.deleteBrand);
 
 export default brandRouter;

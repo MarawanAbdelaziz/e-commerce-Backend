@@ -10,7 +10,7 @@ const sendMail = async ({ to, subject, html }) => {
   });
 
   const info = await transporter.sendMail({
-    from: '"OTP code from Job Search App" <Marawan.abdelaziz33@gmail.com>',
+    from: '"OTP code" <Marawan.abdelaziz33@gmail.com>',
     to: to,
     subject: subject || "Hello ✔",
     html: html || "<b>Hello world?</b>",

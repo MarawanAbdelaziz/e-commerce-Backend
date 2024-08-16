@@ -16,7 +16,7 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
-    image: String,
+    image: { public_id: String, secure_url: String },
     coverImages: [String],
     price: {
       type: Number,

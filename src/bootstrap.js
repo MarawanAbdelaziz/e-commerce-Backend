@@ -1,17 +1,16 @@
 import connectDB from "../DB/DBConnection.js";
-import brandRouter from "./modules/brand/brand.routes.js";
-import categoryRouter from "./modules/category/category.routes.js";
-import productRouter from "./modules/product/product.routes.js";
-import subCategoryRouter from "./modules/subCategory/subCategory.routes.js";
+
+import * as r from "./modules/index.routes.js";
 
 const bootstrap = (app, express) => {
   connectDB();
   app.use(express.json());
 
-  app.use("/category", categoryRouter);
-  app.use("/brand", brandRouter);
-  app.use("/subCategory", subCategoryRouter);
-  app.use("/product", productRouter);
+  app.use("/user", r.userRouter);
+  app.use("/category", r.categoryRouter);
+  app.use("/brand", r.brandRouter);
+  app.use("/subCategory", r.subCategoryRouter);
+  app.use("/product", r.productRouter);
 
   app.use("*", (req, res, next) => {
     next(new Error(`inValid url: ${req.originalUrl}`, { cause: 404 }));

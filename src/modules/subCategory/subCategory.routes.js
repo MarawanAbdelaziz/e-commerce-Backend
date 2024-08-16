@@ -1,15 +1,23 @@
 import express from "express";
 
-import * as SC from "./controllers/subCategory.controller.js";
-import multerLoacl, { validExtension } from "../../services/multerLocal.js";
+import * as SC from "./subCategory.controller.js";
+import { multerHost, validExtension } from "../../middleware/multer.js";
 
 const subCategoryRouter = express.Router();
 
 subCategoryRouter
-  .post("/", multerLoacl(validExtension.image,'subCategory').single("image"), SC.addSubCategory)
-  .get("/allSubCategories", SC.getAllSubCategories)
+  .post(
+    "/",
+    multerHost(validExtension.image).single("image"),
+    SC.addSubCategory
+  )
+  .get("/", SC.getAllSubCategories)
   .get("/:slug", SC.getSubCategory)
-  .put("/:slug", multerLoacl(validExtension.image,'subCategory').single("image"), SC.updateSubCategory)
+  .put(
+    "/:slug",
+    multerHost(validExtension.image).single("image"),
+    SC.updateSubCategory
+  )
   .delete("/:slug", SC.deleteSubCategory);
 
 export default subCategoryRouter;

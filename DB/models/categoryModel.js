@@ -16,7 +16,6 @@ const categorySchema = new Schema(
       type: String,
       required: true,
     },
-    image: String,
     createdBy: {
       type: mongoose.Types.ObjectId,
       ref: "user",

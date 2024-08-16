@@ -1,7 +1,7 @@
 import slug from "slug";
-import subCategoryModel from "../../../../DB/models/subGategoryModel.js";
-import asyncHandler from "../../../middleware/asyncHandler.js";
-import categoryModel from "../../../../DB/models/categoryModel.js";
+import subCategoryModel from "../../../DB/models/subGategoryModel.js";
+import asyncHandler from "../../middleware/asyncHandler.js";
+import categoryModel from "../../../DB/models/categoryModel.js";
 import fs from "fs";
 
 export const addSubCategory = asyncHandler(async (req, res, next) => {

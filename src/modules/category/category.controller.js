@@ -1,6 +1,6 @@
 import slug from "slug";
-import categoryModel from "../../../../DB/models/categoryModel.js";
-import asyncHandler from "../../../middleware/asyncHandler.js";
+import categoryModel from "../../../DB/models/categoryModel.js";
+import asyncHandler from "../../middleware/asyncHandler.js";
 import fs from "fs";
 
 export const addCategory = asyncHandler(async (req, res, next) => {

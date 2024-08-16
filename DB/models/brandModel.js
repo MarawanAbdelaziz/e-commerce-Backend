@@ -16,7 +16,6 @@ const brandSchema = new Schema(
       type: String,
       required: true,
     },
-    image: String,
     createdBy: {
       type: mongoose.Types.ObjectId,
       ref: "user",
@@ -35,4 +34,4 @@ const brandSchema = new Schema(
 
 const brandModel = model("brand", brandSchema);
 
-export default brandModel; 
+export default brandModel;
