@@ -11,7 +11,6 @@ export const addCategory = asyncHandler(async (req, res, next) => {
   console.log(req.body.name);
 
   req.body.slug = slug(req.body.name);
-  req.file.path && (req.body.image = req.file.path);
 
   const category = await categoryModel.create(req.body);
 
@@ -50,14 +49,11 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
   }
 
   name && (req.body.slug = slug(name));
-  req.file.path && (req.body.image = req.file.path);
 
   const category = await categoryModel.findOneAndUpdate(
     { slug: slugName.toLowerCase() },
     req.body
   );
-
-  req.file.path && fs.unlink(category.image, () => {});
 
   if (!category) {
     return next(

@@ -5,6 +5,7 @@ import categoryModel from "../../../DB/models/categoryModel.js";
 import brandModel from "../../../DB/models/brandModel.js";
 import subCategoryModel from "../../../DB/models/subGategoryModel.js";
 import fs from "fs";
+import cloudinary from "../../utils/cloudinary.js";
 
 export const addProduct = asyncHandler(async (req, res, next) => {
   const findProduct = await productModel.findOne({
@@ -38,15 +39,21 @@ export const addProduct = asyncHandler(async (req, res, next) => {
   }
 
   req.body.slug = slug(req.body.name);
-  req.files.image.length && (req.body.image = req.files.image[0].path);
 
-  if (req.files.images.length) {
+  if (req.files.length) {
     const images = [];
-    for (const element of req.files.images) {
-      images.push(element.path);
+    for (const file of req.files) {
+      const { public_id, secure_url } = await cloudinary.uploader.upload(
+        file.path,
+        {
+          folder: "product",
+        }
+      );
+
+      images.push({ public_id, secure_url });
     }
 
-    req.body.coverImages = images;
+    req.body.images = images;
   }
 
   const product = await productModel.create(req.body);

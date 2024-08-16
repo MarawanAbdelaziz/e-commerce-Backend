@@ -1,7 +1,6 @@
 import slug from "slug";
 import brandModel from "../../../DB/models/brandModel.js";
 import asyncHandler from "../../middleware/asyncHandler.js";
-import fs from "fs";
 import cloudinary from "../../utils/cloudinary.js";
 
 export const addBrand = asyncHandler(async (req, res, next) => {
@@ -11,14 +10,16 @@ export const addBrand = asyncHandler(async (req, res, next) => {
   }
   req.body.slug = slug(req.body.name);
 
-  const { public_id, secure_url } = await cloudinary.uploader.upload(
-    req.file.path,
-    {
-      folder: "brand",
-    }
-  );
+  if (req.file.path) {
+    const { public_id, secure_url } = await cloudinary.uploader.upload(
+      req.file.path,
+      {
+        folder: "product",
+      }
+    );
 
-  req.file.path && (req.body.image = { public_id, secure_url });
+    req.body.image = { public_id, secure_url };
+  }
 
   const brand = await brandModel.create(req.body);
 
@@ -57,11 +58,19 @@ export const updateBrand = asyncHandler(async (req, res, next) => {
   }
 
   req.body.slug = slug(name);
-  req.file.path && (req.body.image = req.file.path);
+
+  if (req.file.path) {
+    const { public_id, secure_url } = await cloudinary.uploader.upload(
+      req.file.path,
+      {
+        folder: "product",
+      }
+    );
+
+    req.body.image = { public_id, secure_url };
+  }
 
   const brand = await brandModel.findOneAndUpdate({ slug: slugName }, req.body);
-
-  req.file.path && fs.unlink(category.image, () => {});
 
   if (!brand) {
     return next(new Error("there is no brand with this name", { cause: 404 }));

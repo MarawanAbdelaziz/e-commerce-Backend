@@ -22,7 +22,6 @@ export const addSubCategory = asyncHandler(async (req, res, next) => {
   }
 
   req.body.slug = slug(req.body.name);
-  req.file.path && (req.body.image = req.file.path);
 
   const subCategory = await subCategoryModel.create(req.body);
 
@@ -72,13 +71,10 @@ export const updateSubCategory = asyncHandler(async (req, res, next) => {
   }
 
   name && (req.body.slug = slug(name));
-  req.file.path && (req.body.image = req.file.path);
-
   const subCategory = await subCategoryModel.findOneAndUpdate(
     { slug: slugName },
     req.body
   );
-  req.file.path && fs.unlink(category.image, () => {});
 
   if (!subCategory) {
     return next(

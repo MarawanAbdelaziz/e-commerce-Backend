@@ -16,8 +16,13 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
-    image: { public_id: String, secure_url: String },
-    coverImages: [String],
+    images: [
+      {
+        public_id: { type: String, required: true },
+        secure_url: { type: String, required: true },
+        _id: false,
+      },
+    ],
     price: {
       type: Number,
       required: [true, "price is required"],

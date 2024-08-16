@@ -6,18 +6,10 @@ import { multerHost, validExtension } from "../../middleware/multer.js";
 const subCategoryRouter = express.Router();
 
 subCategoryRouter
-  .post(
-    "/",
-    multerHost(validExtension.image).single("image"),
-    SC.addSubCategory
-  )
+  .post("/", SC.addSubCategory)
   .get("/", SC.getAllSubCategories)
   .get("/:slug", SC.getSubCategory)
-  .put(
-    "/:slug",
-    multerHost(validExtension.image).single("image"),
-    SC.updateSubCategory
-  )
+  .put("/:slug", SC.updateSubCategory)
   .delete("/:slug", SC.deleteSubCategory);
 
 export default subCategoryRouter;

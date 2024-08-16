@@ -4,7 +4,7 @@ import path from "path";
 import fs from "fs";
 
 export const validExtension = {
-  image: ["image/png", "image/jpeg", "image/jpg"],
+  image: ["image/png", "image/jpeg", "image/jpg", "image/webp"],
   pdf: ["application/pdf"],
   video: ["video/mp4", "video/mkv"],
   doc: [
