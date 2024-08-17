@@ -1,22 +1,25 @@
+import asyncHandler from "./asyncHandler";
+
+let dataMethod = ["body", "params", "query", "headers", "file", "files"];
+
 const validation = (schema) => {
-  return async (req, res, next) => {
-    try {
-      const validationData = schema.validate(req.body, {
-        abortEarly: false,
-      });
-
-      if (validationData.error) {
-        return res.status(400).json({
-          message: "validation error",
-          error: validationData.error.details,
-        });
+  return asyncHandler(async (req, res, next) => {
+    let arrErrors = [];
+    dataMethod.forEach((key) => {
+      if (schema[key]) {
+        const { error } = schema[key].validate(req[key], { abortEarly: false });
+        if (error.details) {
+          arrErrors.push(...error.details);
+        }
       }
+    });
 
-      next();
-    } catch (error) {
-      res.status(500).json({ message: "server error", error: error.message });
+    if (arrErrors.length) {
+      return res.json({ message: "validation error", error: arrErrors });
     }
-  };
+
+    next();
+  });
 };
 
 export default validation;

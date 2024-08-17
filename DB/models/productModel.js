@@ -50,7 +50,7 @@ const productSchema = new Schema(
       trim: true,
       min: [0, "min rateCount is 0"],
     },
-    rateAvrage: {
+    rateAverage: {
       type: Number,
       trim: true,
       min: [0, "min rateAvrage is 0"],

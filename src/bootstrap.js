@@ -1,8 +1,9 @@
 import connectDB from "../DB/DBConnection.js";
-
+import cors from "cors";
 import * as r from "./modules/index.routes.js";
 
 const bootstrap = (app, express) => {
+  app.use(cors());
   connectDB();
   app.use(express.json());
 
