@@ -12,26 +12,22 @@ export const addProduct = asyncHandler(async (req, res, next) => {
     name: req.body.name,
   });
 
-  const findCategory = await categoryModel.findById({
-    _id: req.body.category,
-  });
-  const findSubCategory = await subCategoryModel.findById({
-    _id: req.body.subCategory,
-  });
-  const findBrand = await brandModel.findById({
-    _id: req.body.brand,
-  });
-
   if (findProduct) {
     return next(new Error("This product name already exist"));
   }
 
-  if (!findCategory || !findSubCategory || !findBrand) {
-    let itemMissing = "";
+  const [findCategory, findSubCategory, findBrand] = await Promise.all([
+    categoryModel.findById(req.body.category),
+    subCategoryModel.findById(req.body.subCategory),
+    brandModel.findById(req.body.brand),
+  ]);
 
-    !findCategory && (itemMissing = "category");
-    !findSubCategory && (itemMissing = "subCategory");
-    !findBrand && (itemMissing = "brand");
+  if (!findCategory || !findSubCategory || !findBrand) {
+    const itemMissing = !findCategory
+      ? "category"
+      : !findSubCategory
+      ? "subCategory"
+      : "brand";
 
     return next(
       new Error(`there is no ${itemMissing}, please try again`, { cause: 404 })
@@ -93,43 +89,62 @@ export const getProduct = asyncHandler(async (req, res, next) => {
 
 export const updateProduct = asyncHandler(async (req, res, next) => {
   const slugName = req.params.slug;
-  const { name } = req.body;
+  const { name, category, subCategory, brand } = req.body;
 
   const findProduct = await productModel.findOne({ name });
-  const findCategory = await categoryModel.findById({
-    _id: req.body.category,
-  });
-  const findSubCategory = await subCategoryModel.findById({
-    _id: req.body.subCategory,
-  });
-  const findBrand = await brandModel.findById({
-    _id: req.body.brand,
-  });
-
   if (findProduct) {
     return next(new Error("This name is already taken"));
   }
-  if (!findCategory || !findSubCategory || !findBrand) {
-    let itemMissing = "";
 
-    !findCategory && (itemMissing = "category");
-    !findSubCategory && (itemMissing = "subCategory");
-    !findBrand && (itemMissing = "brand");
-
+  if ((category && subCategory == null) || (category == null && subCategory)) {
     return next(
-      new Error(`there is no ${itemMissing}, please try again`, { cause: 404 })
+      new Error(`plasee give me category and subCategory or i will kill you`, {
+        cause: 400,
+      })
     );
+  }
+  if (category && subCategory) {
+    const findCategory = await categoryModel.findById(category);
+    const findSubCategory = await subCategoryModel.findById(subCategory);
+
+    if (!findCategory || !findSubCategory) {
+      const itemMissing = !findCategory ? "category" : "subCategory";
+
+      return next(
+        new Error(`there is no ${itemMissing}, please try again`, {
+          cause: 404,
+        })
+      );
+    }
+  }
+
+  if (brand) {
+    const findBrand = await brandModel.findById(brand);
+    if (!findBrand) {
+      return next(
+        new Error(`there is no brand, please try again`, {
+          cause: 404,
+        })
+      );
+    }
   }
 
   name && (req.body.slug = slug(name));
-  req.files.image.length && (req.body.image = req.files.image[0].path);
 
-  if (req.files.images.length) {
+  if (req.files.length) {
     const images = [];
-    for (const element of req.files.images) {
-      images.push(element.path);
+    for (const file of req.files) {
+      const { public_id, secure_url } = await cloudinary.uploader.upload(
+        file.path,
+        {
+          folder: "product",
+        }
+      );
+
+      images.push({ public_id, secure_url });
     }
-    req.body.coverImages = images;
+
+    req.body.images = images;
   }
 
   const product = await productModel.findOneAndUpdate(
@@ -137,12 +152,10 @@ export const updateProduct = asyncHandler(async (req, res, next) => {
     req.body
   );
 
-  req.files.image[0].path && fs.unlink(product.image, () => {});
-
-  if (req.files.images.length) {
-    for (const element of product.coverImages) {
-      fs.unlink(element, () => {});
-    }
+  if (req.files.length) {
+    await cloudinary.api.delete_resources(
+      product.images.map((file) => file.public_id)
+    );
   }
 
   if (!product) {
@@ -162,6 +175,10 @@ export const deleteProduct = asyncHandler(async (req, res, next) => {
     .populate("category")
     .populate("brand")
     .populate("subCategory");
+
+  await cloudinary.api.delete_resources(
+    product.images.map((file) => file.public_id)
+  );
 
   if (!product) {
     return next(

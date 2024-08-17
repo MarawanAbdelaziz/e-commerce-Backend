@@ -9,7 +9,7 @@ brandRouter
   .post("/", multerHost(validExtension.image).single("image"), BC.addBrand)
   .get("/", BC.getAllBrands)
   .get("/:slug", BC.getBrand)
-  .put("/:slug", BC.updateBrand)
+  .put("/:slug", multerHost(validExtension.image).single("image"), BC.updateBrand)
   .delete("/:slug", BC.deleteBrand);
 
 export default brandRouter;

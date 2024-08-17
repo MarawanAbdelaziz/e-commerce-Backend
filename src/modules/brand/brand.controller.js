@@ -14,7 +14,7 @@ export const addBrand = asyncHandler(async (req, res, next) => {
     const { public_id, secure_url } = await cloudinary.uploader.upload(
       req.file.path,
       {
-        folder: "product",
+        folder: "brand",
       }
     );
 
@@ -63,7 +63,7 @@ export const updateBrand = asyncHandler(async (req, res, next) => {
     const { public_id, secure_url } = await cloudinary.uploader.upload(
       req.file.path,
       {
-        folder: "product",
+        folder: "brand",
       }
     );
 
@@ -71,6 +71,8 @@ export const updateBrand = asyncHandler(async (req, res, next) => {
   }
 
   const brand = await brandModel.findOneAndUpdate({ slug: slugName }, req.body);
+
+  req.file.path && (await cloudinary.uploader.destroy(brand.image.public_id));
 
   if (!brand) {
     return next(new Error("there is no brand with this name", { cause: 404 }));
