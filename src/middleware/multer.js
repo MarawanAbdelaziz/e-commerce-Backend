@@ -51,7 +51,7 @@ export const multerHost = (customValidation) => {
       return cb(null, true);
     }
 
-    cb(new Error("invalid file type: png or jpg only!"), false);
+    cb(new Error("invalid file type: jpeg, webp, png or jpg only!"), false);
   };
 
   const upload = multer({ fileFilter, storage });

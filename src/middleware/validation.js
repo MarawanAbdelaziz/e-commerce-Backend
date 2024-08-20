@@ -1,4 +1,4 @@
-import asyncHandler from "./asyncHandler";
+import asyncHandler from "./asyncHandler.js";
 
 let dataMethod = ["body", "params", "query", "headers", "file", "files"];
 
@@ -8,7 +8,7 @@ const validation = (schema) => {
     dataMethod.forEach((key) => {
       if (schema[key]) {
         const { error } = schema[key].validate(req[key], { abortEarly: false });
-        if (error.details) {
+        if (error) {
           arrErrors.push(...error.details);
         }
       }

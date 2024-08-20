@@ -88,83 +88,83 @@ export const getProduct = asyncHandler(async (req, res, next) => {
 });
 
 export const updateProduct = asyncHandler(async (req, res, next) => {
-  const slugName = req.params.slug;
-  const { name, category, subCategory, brand } = req.body;
+  // const slugName = req.params.slug;
+  // const { name, category, subCategory, brand } = req.body;
 
-  const findProduct = await productModel.findOne({ name });
-  if (findProduct) {
-    return next(new Error("This name is already taken"));
-  }
+  // const findProduct = await productModel.findOne({ name });
+  // if (findProduct) {
+  //   return next(new Error("This name is already taken"));
+  // }
 
-  if ((category && subCategory == null) || (category == null && subCategory)) {
-    return next(
-      new Error(`plasee give me category and subCategory or i will kill you`, {
-        cause: 400,
-      })
-    );
-  }
-  if (category && subCategory) {
-    const findCategory = await categoryModel.findById(category);
-    const findSubCategory = await subCategoryModel.findById(subCategory);
+  // if ((category && subCategory == null) || (category == null && subCategory)) {
+  //   return next(
+  //     new Error(`plasee give me category and subCategory or i will kill you`, {
+  //       cause: 400,
+  //     })
+  //   );
+  // }
+  // if (category && subCategory) {
+  //   const findCategory = await categoryModel.findById(category);
+  //   const findSubCategory = await subCategoryModel.findById(subCategory);
 
-    if (!findCategory || !findSubCategory) {
-      const itemMissing = !findCategory ? "category" : "subCategory";
+  //   if (!findCategory || !findSubCategory) {
+  //     const itemMissing = !findCategory ? "category" : "subCategory";
 
-      return next(
-        new Error(`there is no ${itemMissing}, please try again`, {
-          cause: 404,
-        })
-      );
-    }
-  }
+  //     return next(
+  //       new Error(`there is no ${itemMissing}, please try again`, {
+  //         cause: 404,
+  //       })
+  //     );
+  //   }
+  // }
 
-  if (brand) {
-    const findBrand = await brandModel.findById(brand);
-    if (!findBrand) {
-      return next(
-        new Error(`there is no brand, please try again`, {
-          cause: 404,
-        })
-      );
-    }
-  }
+  // if (brand) {
+  //   const findBrand = await brandModel.findById(brand);
+  //   if (!findBrand) {
+  //     return next(
+  //       new Error(`there is no brand, please try again`, {
+  //         cause: 404,
+  //       })
+  //     );
+  //   }
+  // }
 
-  name && (req.body.slug = slug(name));
+  // name && (req.body.slug = slug(name));
 
-  if (req.files.length) {
-    const images = [];
-    for (const file of req.files) {
-      const { public_id, secure_url } = await cloudinary.uploader.upload(
-        file.path,
-        {
-          folder: "product",
-        }
-      );
+  // if (req.files.length) {
+  //   const images = [];
+  //   for (const file of req.files) {
+  //     const { public_id, secure_url } = await cloudinary.uploader.upload(
+  //       file.path,
+  //       {
+  //         folder: "product",
+  //       }
+  //     );
 
-      images.push({ public_id, secure_url });
-    }
+  //     images.push({ public_id, secure_url });
+  //   }
 
-    req.body.images = images;
-  }
+  //   req.body.images = images;
+  // }
 
-  const product = await productModel.findOneAndUpdate(
-    { slug: slugName },
-    req.body
-  );
+  // const product = await productModel.findOneAndUpdate(
+  //   { slug: slugName },
+  //   req.body
+  // );
 
-  if (req.files.length) {
-    await cloudinary.api.delete_resources(
-      product.images.map((file) => file.public_id)
-    );
-  }
+  // if (req.files.length) {
+  //   await cloudinary.api.delete_resources(
+  //     product.images.map((file) => file.public_id)
+  //   );
+  // }
 
-  if (!product) {
-    return next(
-      new Error("there is no product with this name", { cause: 404 })
-    );
-  }
+  // if (!product) {
+  //   return next(
+  //     new Error("there is no product with this name", { cause: 404 })
+  //   );
+  // }
 
-  res.json({ Message: "updated" });
+  res.json({ Message: "updated", f: req.files });
 });
 
 export const deleteProduct = asyncHandler(async (req, res, next) => {

@@ -1,17 +1,17 @@
 import connectDB from "../DB/DBConnection.js";
 import cors from "cors";
-import * as r from "./modules/index.routes.js";
+import * as R from "./modules/index.routes.js";
 
-const bootstrap = (app, express) => {
+const initApp = (app, express) => {
   app.use(cors());
   connectDB();
   app.use(express.json());
 
-  app.use("/user", r.userRouter);
-  app.use("/category", r.categoryRouter);
-  app.use("/brand", r.brandRouter);
-  app.use("/subCategory", r.subCategoryRouter);
-  app.use("/product", r.productRouter);
+  app.use("/user", R.userRouter);
+  app.use("/category", R.categoryRouter);
+  app.use("/brand", R.brandRouter);
+  app.use("/subCategory", R.subCategoryRouter);
+  app.use("/product", R.productRouter);
 
   app.use("*", (req, res, next) => {
     next(new Error(`inValid url: ${req.originalUrl}`, { cause: 404 }));
@@ -24,4 +24,4 @@ const bootstrap = (app, express) => {
   );
 };
 
-export default bootstrap;
+export default initApp;

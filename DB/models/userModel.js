@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import systemRoles from "../../src/utils/systemRoles.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -19,7 +20,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, "password is required"],
-      minLength: [8, "password must be at least 8 characters"],
+      minLength: [5, "password must be at least 5 characters"],
       trim: true,
     },
     confirmed: {
@@ -32,7 +33,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user", "admin"],
+      enum: Object.values(systemRoles),
       default: "user",
     },
     phone: [String],
