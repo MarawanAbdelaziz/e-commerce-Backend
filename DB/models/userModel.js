@@ -39,6 +39,7 @@ const userSchema = new mongoose.Schema(
     phone: [String],
     address: [String],
     code: String,
+    passwordChangeAt: Date,
   },
   {
     timestamps: true,

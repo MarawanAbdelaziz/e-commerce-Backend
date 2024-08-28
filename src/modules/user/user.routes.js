@@ -7,9 +7,9 @@ const userRouter = express.Router();
 userRouter
   .post("/", UC.register)
   .get("/verifyEmail/:token", UC.verifyEmail)
-  .get("/refreshEmail", UC.refreshEmail);
-// .patch("/:slug", UC.forgetPassword)
-// .patch("/:slug", UC.resetPassword)
-// .post("/:slug", UC.signIn);
+  .get("/refreshEmail", UC.refreshEmail)
+  .patch("/forgetPassword", UC.forgetPassword)
+  .patch("/resetPassword", UC.resetPassword)
+  .get("/login", UC.login);
 
 export default userRouter;
