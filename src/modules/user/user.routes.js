@@ -10,6 +10,6 @@ userRouter
   .get("/refreshEmail", UC.refreshEmail)
   .patch("/forgetPassword", UC.forgetPassword)
   .patch("/resetPassword", UC.resetPassword)
-  .get("/login", UC.login);
+  .post("/login", UC.login);
 
 export default userRouter;
