@@ -19,7 +19,7 @@ const categorySchema = new Schema(
     createdBy: {
       type: mongoose.Types.ObjectId,
       ref: "user",
-      // required: true,
+      required: [true, "createdBy is required"],
     },
     updatedBy: {
       type: mongoose.Types.ObjectId,

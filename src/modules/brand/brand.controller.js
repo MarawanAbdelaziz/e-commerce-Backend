@@ -9,6 +9,7 @@ export const addBrand = asyncHandler(async (req, res, next) => {
     return next(new Error("This brand name already exist"));
   }
   req.body.slug = slug(req.body.name);
+  req.body.createdBy = req.user._id;
 
   if (req.file.path) {
     const { public_id, secure_url } = await cloudinary.uploader.upload(
@@ -58,6 +59,7 @@ export const updateBrand = asyncHandler(async (req, res, next) => {
   }
 
   req.body.slug = slug(name);
+  req.body.updatedBy = req.user._id;
 
   if (req.file.path) {
     const { public_id, secure_url } = await cloudinary.uploader.upload(

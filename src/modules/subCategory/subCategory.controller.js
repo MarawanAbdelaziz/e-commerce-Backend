@@ -8,8 +8,8 @@ export const addSubCategory = asyncHandler(async (req, res, next) => {
   const findSubCategory = await subCategoryModel.findOne({
     name: req.body.name,
   });
-  const findCategory = await categoryModel.findById({
-    _id: req.body.category,
+  const findCategory = await categoryModel.findOne({
+    name: req.params.categorySlug,
   });
 
   if (findSubCategory) {
@@ -22,10 +22,36 @@ export const addSubCategory = asyncHandler(async (req, res, next) => {
   }
 
   req.body.slug = slug(req.body.name);
+  req.body.category = findCategory._id;
+  req.body.createdBy = req.user._id;
 
   const subCategory = await subCategoryModel.create(req.body);
 
   res.status(201).json({ subCategory });
+});
+
+export const getSpecificCategory = asyncHandler(async (req, res, next) => {
+  const slug = req.params.categorySlug;
+
+  const findCategory = await categoryModel.findOne({ slug });
+
+  if (!findCategory) {
+    return next(new Error("there is no category with this name"), {
+      cause: 404,
+    });
+  }
+
+  const subCategory = await subCategoryModel
+    .find({ category:findCategory._id })
+    .populate("category");
+
+  if (!subCategory) {
+    return next(new Error("there is no subCategory with this name"), {
+      cause: 404,
+    });
+  }
+
+  res.json({ subCategory });
 });
 
 export const getAllSubCategories = asyncHandler(async (req, res, next) => {
@@ -38,6 +64,7 @@ export const getAllSubCategories = asyncHandler(async (req, res, next) => {
 
 export const getSubCategory = asyncHandler(async (req, res, next) => {
   const slug = req.params.slug;
+  console.log(slug);
 
   const subCategory = await subCategoryModel
     .findOne({ slug })
@@ -71,6 +98,8 @@ export const updateSubCategory = asyncHandler(async (req, res, next) => {
   }
 
   name && (req.body.slug = slug(name));
+  req.body.updatedBy = req.user._id;
+  
   const subCategory = await subCategoryModel.findOneAndUpdate(
     { slug: slugName },
     req.body

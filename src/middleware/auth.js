@@ -1,11 +1,10 @@
 import jwt from "jsonwebtoken";
-import userModel from "../../DB/models/uesrModel.js";
 import asyncHandler from "./asyncHandler.js";
+import userModel from "../../DB/models/userModel.js";
 
 export const auth = (roles = []) => {
-  asyncHandler(async (req, res, next) => {
+  return asyncHandler(async (req, res, next) => {
     const { token } = req.headers;
-
     if (!token) {
       res.status(404).json({ message: "Give me your token" });
     }
@@ -24,10 +23,12 @@ export const auth = (roles = []) => {
       return res.status(401).json({ Message: "you don't have premission" });
     }
 
-    if (parseInt(user.passwordChangeAt.getTime() / 1000) > decode.iat) {
-      return res
-        .status(403)
-        .json({ Message: "expired token please login again" });
+    if (user.passwordChangeAt) {
+      if (parseInt(user.passwordChangeAt.getTime() / 1000) > decode.iat) {
+        return res
+          .status(403)
+          .json({ Message: "expired token please login again" });
+      }
     }
 
     req.user = user;

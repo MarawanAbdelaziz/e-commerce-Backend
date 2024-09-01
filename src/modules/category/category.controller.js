@@ -4,13 +4,17 @@ import asyncHandler from "../../middleware/asyncHandler.js";
 import fs from "fs";
 
 export const addCategory = asyncHandler(async (req, res, next) => {
-  const findCategory = await categoryModel.findOne({ name: req.body.name });
+ 
+const {name} = req.body
+
+  const findCategory = await categoryModel.findOne({ name: name.toLowerCase() });
+  
   if (findCategory) {
     return next(new Error("This category name already exist"));
   }
-  console.log(req.body.name);
 
-  req.body.slug = slug(req.body.name);
+  req.body.slug = slug(name);
+  req.body.createdBy = req.user._id;
 
   const category = await categoryModel.create(req.body);
 
@@ -49,6 +53,7 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
   }
 
   name && (req.body.slug = slug(name));
+  req.body.updatedBy = req.user._id;
 
   const category = await categoryModel.findOneAndUpdate(
     { slug: slugName.toLowerCase() },

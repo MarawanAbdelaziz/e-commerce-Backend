@@ -1,10 +1,10 @@
 import joi from "joi";
 import generalFields from "../../utils/generalFields.js";
 
+export const register = {
+  body: generalFields.user.required(),
+};
 export const login = {
-  body: joi.object({
-    id: generalFields.id,
-  }),
-
-  headers: generalFields.headers,
+  body: generalFields.user,
+  // headers: generalFields.headers,
 };

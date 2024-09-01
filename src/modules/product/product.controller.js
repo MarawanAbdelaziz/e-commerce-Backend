@@ -35,6 +35,7 @@ export const addProduct = asyncHandler(async (req, res, next) => {
   }
 
   req.body.slug = slug(req.body.name);
+  req.body.createdBy = req.user._id;
 
   if (req.files.length) {
     const images = [];
@@ -130,6 +131,7 @@ export const updateProduct = asyncHandler(async (req, res, next) => {
   // }
 
   // name && (req.body.slug = slug(name));
+  // req.body.updatedBy = req.user._id;
 
   // if (req.files.length) {
   //   const images = [];

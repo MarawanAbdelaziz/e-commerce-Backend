@@ -2,14 +2,26 @@ import express from "express";
 
 import * as BC from "./brand.controller.js";
 import { multerHost, validExtension } from "../../middleware/multer.js";
+import { auth } from "../../middleware/auth.js";
+import systemRoles from "../../utils/systemRoles.js";
 
 const brandRouter = express.Router();
 
 brandRouter
-  .post("/", multerHost(validExtension.image).single("image"), BC.addBrand)
-  .get("/", BC.getAllBrands)
-  .get("/:slug", BC.getBrand)
-  .put("/:slug", multerHost(validExtension.image).single("image"), BC.updateBrand)
-  .delete("/:slug", BC.deleteBrand);
+  .post(
+    "/",
+    auth([systemRoles.admin]),
+    multerHost(validExtension.image).single("image"),
+    BC.addBrand
+  )
+  .get("/", auth([systemRoles.admin, systemRoles.user]), BC.getAllBrands)
+  .get("/:slug", auth([systemRoles.admin, systemRoles.user]), BC.getBrand)
+  .put(
+    "/:slug",
+    auth([systemRoles.admin]),
+    multerHost(validExtension.image).single("image"),
+    BC.updateBrand
+  )
+  .delete("/:slug", auth([systemRoles.admin]), BC.deleteBrand);
 
 export default brandRouter;

@@ -2,14 +2,19 @@ import express from "express";
 
 import * as SC from "./subCategory.controller.js";
 import { multerHost, validExtension } from "../../middleware/multer.js";
+import validation from "../../middleware/validation.js";
+import * as SCV from "./subCategory.validation.js";
+import { auth } from "../../middleware/auth.js";
+import systemRoles from "../../utils/systemRoles.js";
 
-const subCategoryRouter = express.Router();
+const subCategoryRouter = express.Router({ mergeParams: true });
 
 subCategoryRouter
-  .post("/", SC.addSubCategory)
-  .get("/", SC.getAllSubCategories)
-  .get("/:slug", SC.getSubCategory)
-  .put("/:slug", SC.updateSubCategory)
-  .delete("/:slug", SC.deleteSubCategory);
+  .post("/", auth([systemRoles.admin]), validation(SCV.addSubCategory), SC.addSubCategory)
+  .get("/", auth([systemRoles.admin, systemRoles.user]), SC.getSpecificCategory)
+  .get("/", auth([systemRoles.admin, systemRoles.user]), SC.getAllSubCategories)
+  .get("/:slug", auth([systemRoles.admin, systemRoles.user]), SC.getSubCategory)
+  .put("/:slug", auth([systemRoles.admin]), SC.updateSubCategory)
+  .delete("/:slug", auth([systemRoles.admin]), SC.deleteSubCategory);
 
 export default subCategoryRouter;
