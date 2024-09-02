@@ -10,10 +10,10 @@ import * as CV  from "./category.validation.js";
 const categoryRouter = express.Router();
 
 categoryRouter
-  .post("/", auth([systemRoles.admin]), validation(CV.addCategory), CC.addCategory)
+  .post("/", auth([systemRoles.admin]), validation(CV.category), CC.addCategory)
   .get("/", auth([systemRoles.admin, systemRoles.user]), CC.getAllCategories)
   .get("/:slug", auth([systemRoles.admin, systemRoles.user]), CC.getCategory)
-  .put("/:slug", auth([systemRoles.admin]), validation(CV.updateCategory), CC.updateCategory)
+  .put("/:slug", auth([systemRoles.admin]), validation(CV.category), CC.updateCategory)
   .delete("/:slug", auth([systemRoles.admin]), CC.deleteCategory)
   .use("/:categorySlug/subCategory", subCategoryRouter);
 

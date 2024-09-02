@@ -42,7 +42,7 @@ export const getSpecificCategory = asyncHandler(async (req, res, next) => {
   }
 
   const subCategory = await subCategoryModel
-    .find({ category:findCategory._id })
+    .find({ category: findCategory._id })
     .populate("category");
 
   if (!subCategory) {
@@ -83,31 +83,35 @@ export const updateSubCategory = asyncHandler(async (req, res, next) => {
   const slugName = req.params.slug;
   const { name } = req.body;
 
-  const findSubCategory = await subCategoryModel.findOne({ name });
-  const findCategory = await categoryModel.findById({
-    _id: req.body.category,
-  });
+  const categorySlug = req.params.categorySlug;
 
-  if (findSubCategory) {
-    return next(new Error("This name is already taken"));
-  }
+  const findCategory = await categoryModel.findOne({ slug: categorySlug });
+
   if (!findCategory) {
     return next(
       new Error("there is no category, please try again", { cause: 404 })
     );
   }
 
+  const findSubCategory = await subCategoryModel.findOne({ name });
+
+  if (findSubCategory) {
+    return next(new Error("This name is already taken"));
+  }
+
   name && (req.body.slug = slug(name));
   req.body.updatedBy = req.user._id;
-  
+
   const subCategory = await subCategoryModel.findOneAndUpdate(
-    { slug: slugName },
+    { slug: slugName, category: findCategory._id },
     req.body
   );
 
   if (!subCategory) {
     return next(
-      new Error("there is no subCategory with this name", { cause: 404 })
+      new Error("there is no subCategory with this name or category", {
+        cause: 404,
+      })
     );
   }
 

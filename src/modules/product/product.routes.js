@@ -10,7 +10,7 @@ import systemRoles from "../../utils/systemRoles.js";
 const productRouter = express.Router();
 
 productRouter
-  .post("/", auth([systemRoles.admin]), multerHost(validExtension.image).array("images", 4), PC.addProduct)
+  .post("/", auth([systemRoles.admin]), validation(PV.addProduct), multerHost(validExtension.image).array("images", 4), PC.addProduct)
   .get("/", auth([systemRoles.admin, systemRoles.user]), PC.getAllProducts)
   .get("/:slug", auth([systemRoles.admin, systemRoles.user]), PC.getProduct)
   .put("/:slug", auth([systemRoles.admin]),  multerHost(validExtension.image).array("images", 4), validation(PV.putProduct),  PC.updateProduct)
