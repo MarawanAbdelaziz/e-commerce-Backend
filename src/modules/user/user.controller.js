@@ -29,9 +29,9 @@ export const register = asyncHandler(async (req, res, next) => {
 
   req.body.password = bcrypt.hashSync(password, Number(process.env.hashNum));
 
-  await userModel.create(req.body);
+  const user = await userModel.create(req.body);
 
-  res.status(201).json({ message: "done" });
+  res.status(201).json({ message: "done", user });
 });
 
 //================================= verifyEmail ===================================//
@@ -132,7 +132,7 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
       passwordChangeAt: Date.now(),
     }
   );
-  
+
   res.json({ message: "Done" });
 });
 
