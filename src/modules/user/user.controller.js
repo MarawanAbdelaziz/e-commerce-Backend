@@ -141,10 +141,20 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
 export const login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
+  const unconfirmedUser = await userModel.findOne({
+    email: email.toLowerCase(),
+    confirmed: false,
+  });
+
+  if (unconfirmedUser) {
+    return next(new Error("Please verify your email address"));
+  }
+
   const findUser = await userModel.findOne({
     email: email.toLowerCase(),
     confirmed: true,
   });
+
   if (!findUser || !bcrypt.compareSync(password, findUser.password)) {
     return next(new Error("Invalid email or password", { cause: 404 }));
   }
