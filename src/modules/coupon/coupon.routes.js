@@ -9,7 +9,7 @@ import * as CV from "./coupon.validation.js";
 const couponRouter = express.Router();
 
 couponRouter
-  .post("/", validation(CV.addCoupon), auth(systemRoles.admin), CC.addCoupon)
-  .put("/:id", validation(CV.updateCoupon), auth(systemRoles.admin), CC.updateCoupon);
+  .post("/", validation(CV.addCoupon), auth([systemRoles.admin]), CC.addCoupon)
+  .put("/:id", validation(CV.updateCoupon), auth([systemRoles.admin]), CC.updateCoupon);
 
 export default couponRouter;

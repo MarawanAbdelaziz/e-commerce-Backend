@@ -9,7 +9,6 @@ import * as CV from "./cart.validation.js";
 const cartRouter = express.Router();
 
 cartRouter
-  .post("/", validation(CV.addCart), auth(systemRoles.admin), CC.addCart)
-  .put("/:id", validation(CV.updateCart), auth(systemRoles.admin), CC.updateCart);
+  .post("/", validation(CV.addCart), auth([systemRoles.admin,systemRoles.user]), CC.cartCoupon);
 
 export default cartRouter;
