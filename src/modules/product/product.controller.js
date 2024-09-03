@@ -151,7 +151,8 @@ export const updateProduct = asyncHandler(async (req, res, next) => {
 
   const product = await productModel.findOneAndUpdate(
     { slug: slugName },
-    req.body
+    req.body,
+    { new: true }
   );
 
   if (req.files.length) {
@@ -166,7 +167,7 @@ export const updateProduct = asyncHandler(async (req, res, next) => {
     );
   }
 
-  res.json({ Message: "updated" });
+  res.json({ Message: "Product updated", product });
 });
 
 export const deleteProduct = asyncHandler(async (req, res, next) => {

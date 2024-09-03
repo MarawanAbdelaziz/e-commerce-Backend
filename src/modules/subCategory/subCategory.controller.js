@@ -104,7 +104,8 @@ export const updateSubCategory = asyncHandler(async (req, res, next) => {
 
   const subCategory = await subCategoryModel.findOneAndUpdate(
     { slug: slugName, category: findCategory._id },
-    req.body
+    req.body,
+    { new: true }
   );
 
   if (!subCategory) {
@@ -115,7 +116,7 @@ export const updateSubCategory = asyncHandler(async (req, res, next) => {
     );
   }
 
-  res.json({ Message: "updated" });
+  res.json({ Message: "SubCategory updated", subCategory });
 });
 
 export const deleteSubCategory = asyncHandler(async (req, res, next) => {

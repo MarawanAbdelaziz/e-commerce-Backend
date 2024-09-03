@@ -72,7 +72,11 @@ export const updateBrand = asyncHandler(async (req, res, next) => {
     req.body.image = { public_id, secure_url };
   }
 
-  const brand = await brandModel.findOneAndUpdate({ slug: slugName }, req.body);
+  const brand = await brandModel.findOneAndUpdate(
+    { slug: slugName },
+    req.body,
+    { new: true }
+  );
 
   req.file.path && (await cloudinary.uploader.destroy(brand.image.public_id));
 
@@ -80,7 +84,7 @@ export const updateBrand = asyncHandler(async (req, res, next) => {
     return next(new Error("there is no brand with this name", { cause: 404 }));
   }
 
-  res.json({ Message: "updated" });
+  res.json({ Message: "Brand updated", brand });
 });
 
 export const deleteBrand = asyncHandler(async (req, res, next) => {

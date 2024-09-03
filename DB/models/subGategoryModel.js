@@ -37,6 +37,12 @@ const subCategorySchema = new Schema(
   }
 );
 
+subCategorySchema.virtual("products", {
+  ref: "product",
+  localField: "_id",
+  foreignField: "subCategory",
+});
+
 const subCategoryModel = model("subCategory", subCategorySchema);
 
 export default subCategoryModel;

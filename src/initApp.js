@@ -12,6 +12,7 @@ const initApp = (app, express) => {
   app.use("/brand", R.brandRouter);
   app.use("/subCategory", R.subCategoryRouter);
   app.use("/product", R.productRouter);
+  app.use("/coupon", R.couponRouter);
 
   app.use("*", (req, res, next) => {
     next(new Error(`inValid url: ${req.originalUrl}`, { cause: 404 }));

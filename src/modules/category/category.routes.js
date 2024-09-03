@@ -7,6 +7,7 @@ import systemRoles from "../../utils/systemRoles.js";
 import validation from "../../middleware/validation.js";
 import * as CV  from "./category.validation.js";
 
+// const categoryRouter = express.Router({ caseSensitive : true });
 const categoryRouter = express.Router();
 
 categoryRouter

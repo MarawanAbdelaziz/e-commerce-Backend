@@ -29,8 +29,15 @@ const categorySchema = new Schema(
   {
     timestamps: true,
     versionKey: false,
+    toJSON: { virtuals: true },
   }
 );
+
+categorySchema.virtual("subCategories", {
+  ref: "subCategory",
+  localField: "_id",
+  foreignField: "category",
+});
 
 const categoryModel = model("category", categorySchema);
 

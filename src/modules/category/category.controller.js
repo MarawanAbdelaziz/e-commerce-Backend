@@ -4,11 +4,12 @@ import asyncHandler from "../../middleware/asyncHandler.js";
 import fs from "fs";
 
 export const addCategory = asyncHandler(async (req, res, next) => {
- 
-const {name} = req.body
+  const { name } = req.body;
 
-  const findCategory = await categoryModel.findOne({ name: name.toLowerCase() });
-  
+  const findCategory = await categoryModel.findOne({
+    name: name.toLowerCase(),
+  });
+
   if (findCategory) {
     return next(new Error("This category name already exist"));
   }
@@ -22,7 +23,8 @@ const {name} = req.body
 });
 
 export const getAllCategories = asyncHandler(async (req, res, next) => {
-  const category = await categoryModel.find();
+  const category = await categoryModel.find().populate("subCategories");
+
   if (category.length == 0) {
     return next(new Error("there is no categories"), { cause: 404 });
   }
@@ -32,7 +34,9 @@ export const getAllCategories = asyncHandler(async (req, res, next) => {
 export const getCategory = asyncHandler(async (req, res, next) => {
   const slug = req.params.slug;
 
-  const category = await categoryModel.findOne({ slug: slug.toLowerCase() });
+  const category = await categoryModel
+    .findOne({ slug: slug.toLowerCase() })
+    .populate("subCategories");
 
   if (!category) {
     return next(new Error("there is no category with this name"), {
@@ -57,7 +61,8 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
 
   const category = await categoryModel.findOneAndUpdate(
     { slug: slugName.toLowerCase() },
-    req.body
+    req.body,
+    { new: true }
   );
 
   if (!category) {
@@ -66,7 +71,7 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
     );
   }
 
-  res.json({ Message: "updated", category });
+  res.json({ Message: "Category updated", category });
 });
 
 export const deleteCategory = asyncHandler(async (req, res, next) => {

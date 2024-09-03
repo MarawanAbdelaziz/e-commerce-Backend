@@ -13,13 +13,8 @@ const couponSchema = new mongoose.Schema(
     amount: {
       type: Number,
       required: [true, "amount is required"],
-      min: [1, "amount must be at least 3 characters"],
-      max: [100, "amount must be at most 32 characters"],
-    },
-    createdBy: {
-      type: Types.ObjectId,
-      ref: "user",
-      required: [true, "createdBy is required"],
+      min: [1, "amount must be at least 1"],
+      max: [100, "amount must be at most 100"],
     },
     fromDate: {
       type: Date,
@@ -28,6 +23,11 @@ const couponSchema = new mongoose.Schema(
     toDate: {
       type: Date,
       required: [true, "toDate is required"],
+    },
+    createdBy: {
+      type: Types.ObjectId,
+      ref: "user",
+      required: [true, "createdBy is required"],
     },
     usedBy: [
       {

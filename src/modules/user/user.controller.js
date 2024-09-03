@@ -132,7 +132,7 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
       passwordChangeAt: Date.now(),
     }
   );
-
+  
   res.json({ message: "Done" });
 });
 
