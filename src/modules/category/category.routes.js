@@ -12,8 +12,8 @@ const categoryRouter = express.Router();
 
 categoryRouter
   .post("/", auth([systemRoles.admin]), validation(CV.category), CC.addCategory)
-  .get("/", auth([systemRoles.admin, systemRoles.user]), CC.getAllCategories)
-  .get("/:slug", auth([systemRoles.admin, systemRoles.user]), CC.getCategory)
+  .get("/", CC.getAllCategories)
+  .get("/:slug", CC.getCategory)
   .put("/:slug", auth([systemRoles.admin]), validation(CV.category), CC.updateCategory)
   .delete("/:slug", auth([systemRoles.admin]), CC.deleteCategory)
   .use("/:categorySlug/subCategory", subCategoryRouter);

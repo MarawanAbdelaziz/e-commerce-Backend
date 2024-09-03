@@ -11,8 +11,8 @@ const brandRouter = express.Router();
 
 brandRouter
   .post("/", auth([systemRoles.admin]), validation(brand), multerHost(validExtension.image).single("image"), BC.addBrand)
-  .get("/", auth([systemRoles.admin, systemRoles.user]), BC.getAllBrands)
-  .get("/:slug", auth([systemRoles.admin, systemRoles.user]), BC.getBrand)
+  .get("/", BC.getAllBrands)
+  .get("/:slug", BC.getBrand)
   .put("/:slug", auth([systemRoles.admin]), validation(brand), multerHost(validExtension.image).single("image"), BC.updateBrand)
   .delete("/:slug", auth([systemRoles.admin]), BC.deleteBrand);
 

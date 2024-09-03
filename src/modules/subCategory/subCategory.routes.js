@@ -11,9 +11,9 @@ const subCategoryRouter = express.Router({ mergeParams: true });
 
 subCategoryRouter
   .post("/", auth([systemRoles.admin]), validation(SCV.subCategory), SC.addSubCategory)
-  .get("/", auth([systemRoles.admin, systemRoles.user]), SC.getSpecificCategory)
-  .get("/", auth([systemRoles.admin, systemRoles.user]), SC.getAllSubCategories)
-  .get("/:slug", auth([systemRoles.admin, systemRoles.user]), SC.getSubCategory)
+  .get("/", SC.getSpecificCategory)
+  .get("/", SC.getAllSubCategories)
+  .get("/:slug", SC.getSubCategory)
   .put("/:slug", auth([systemRoles.admin]), validation(SCV.subCategory), SC.updateSubCategory)
   .delete("/:slug", auth([systemRoles.admin]), SC.deleteSubCategory);
 

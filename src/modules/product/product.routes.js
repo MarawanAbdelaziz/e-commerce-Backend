@@ -11,8 +11,8 @@ const productRouter = express.Router();
 
 productRouter
   .post("/", auth([systemRoles.admin]), validation(PV.addProduct), multerHost(validExtension.image).array("images", 4), PC.addProduct)
-  .get("/", auth([systemRoles.admin, systemRoles.user]), PC.getAllProducts)
-  .get("/:slug", auth([systemRoles.admin, systemRoles.user]), PC.getProduct)
+  .get("/", PC.getAllProducts)
+  .get("/:slug", PC.getProduct)
   .put("/:slug", auth([systemRoles.admin]),  multerHost(validExtension.image).array("images", 4), validation(PV.putProduct),  PC.updateProduct)
   .delete("/:slug", auth([systemRoles.admin]), PC.deleteProduct);
 
