@@ -1,9 +1,11 @@
+import Stripe from "stripe";
 import cartModel from "../../../DB/models/cartModel.js";
 import couponModel from "../../../DB/models/couponModel.js";
 import orderModel from "../../../DB/models/orderModel.js";
 import productModel from "../../../DB/models/productModel.js";
 import asyncHandler from "../../middleware/asyncHandler.js";
 import { sendEmailPDF } from "../../services/sendEmail.js";
+import { payment } from "../../utils/payment.js";
 import { createInvoice } from "../../utils/pdf.js";
 
 //=================================== createOrder ===================================//
@@ -139,6 +141,34 @@ export const createOrder = asyncHandler(async (req, res, next) => {
       contentType: "application/pdf",
     },
   ]);
+
+  if (paymentMethod == "card") {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+    const session = await payment({
+      stripe,
+      payment_method_types: ["card"],
+      mode: "payment",
+      customer_email: req.user.email,
+      metadata: {
+        orderId: order._id.toString(),
+      },
+      success_url: `${req.protocol}://${req.headers.host}/orders/success/${order._id}`,
+      cancel_url: `${req.protocol}://${req.headers.host}/orders/cancel/${order._id}`,
+      line_items: order.products.map((e) => {
+        return {
+          price_data: {
+            currency: "egp",
+            product_data: {
+              name: e.title,
+            },
+            unit_amount: e.finalPrice * 100,
+          },
+          quantity: e.quantity,
+        };
+      }),
+    });
+    return res.status(201).json({ status: "done", url: session.url, order });
+  }
 
   res.status(201).json({ message: "done", order });
 });
