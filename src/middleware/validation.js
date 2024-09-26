@@ -4,6 +4,8 @@ let dataMethod = ["body", "params", "query", "headers", "file", "files"];
 
 const validation = (schema) => {
   return asyncHandler(async (req, res, next) => {
+    console.log(req.body);
+
     let arrErrors = [];
     dataMethod.forEach((key) => {
       if (schema[key]) {

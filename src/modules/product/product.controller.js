@@ -8,8 +8,10 @@ import fs from "fs";
 import cloudinary from "../../utils/cloudinary.js";
 
 export const addProduct = asyncHandler(async (req, res, next) => {
+  const { name, discount, price } = req.body;
+
   const findProduct = await productModel.findOne({
-    name: req.body.name,
+    name: name,
   });
 
   if (findProduct) {
@@ -52,6 +54,8 @@ export const addProduct = asyncHandler(async (req, res, next) => {
 
     req.body.images = images;
   }
+
+  req.body.subPrice = price - price * ((discount || 0) / 100)
 
   const product = await productModel.create(req.body);
 

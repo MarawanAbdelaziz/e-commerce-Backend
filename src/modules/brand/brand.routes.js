@@ -10,10 +10,10 @@ import validation from "../../middleware/validation.js";
 const brandRouter = express.Router();
 
 brandRouter
-  .post("/", auth([systemRoles.admin]), validation(brand), multerHost(validExtension.image).single("image"), BC.addBrand)
+  .post("/", auth([systemRoles.admin]), multerHost(validExtension.image).single("image"),  validation(brand), BC.addBrand)
   .get("/", BC.getAllBrands)
   .get("/:slug", BC.getBrand)
-  .put("/:slug", auth([systemRoles.admin]), validation(brand), multerHost(validExtension.image).single("image"), BC.updateBrand)
+  .put("/:slug", auth([systemRoles.admin]),  multerHost(validExtension.image).single("image"), validation(brand), BC.updateBrand)
   .delete("/:slug", auth([systemRoles.admin]), BC.deleteBrand);
 
 export default brandRouter;

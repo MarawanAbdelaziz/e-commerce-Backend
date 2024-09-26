@@ -29,10 +29,15 @@ const productSchema = new Schema(
       trim: true,
       min: [0, "min price is 0"],
     },
-    priceAfterDiscount: {
+    discount: {
       type: Number,
-      trim: true,
-      min: [0, "min priceAfterDiscount is 0"],
+      default: 1,
+      min: [1, "min discount is 1"],
+      max: [100, "max discount is 100"],
+    },
+    subPrice: {
+      type: Number,
+      min: [1, "min subPrice is 1"],
     },
     stock: {
       type: Number,
@@ -45,15 +50,13 @@ const productSchema = new Schema(
       trim: true,
       min: [0, "min sold is 0"],
     },
-    rateCount: {
+    rateAvg: {
       type: Number,
-      trim: true,
-      min: [0, "min rateCount is 0"],
+      default: 0,
     },
-    rateAverage: {
+    rateNum: {
       type: Number,
-      trim: true,
-      min: [0, "min rateAvrage is 0"],
+      default: 0,
     },
     category: {
       type: mongoose.Types.ObjectId,

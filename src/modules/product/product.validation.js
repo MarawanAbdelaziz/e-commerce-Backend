@@ -9,6 +9,7 @@ export const addProduct = {
     category: generalFields.id.required(),
     subCategory: generalFields.id.required(),
     brand: generalFields.id.required(),
+    discount: joi.number().integer().min(1).max(100),
   }),
 
   files: joi.array().items(generalFields.file).required().label("images"),

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import systemRoles from "../../src/utils/systemRoles.js";
 
 const userSchema = new mongoose.Schema(
@@ -38,8 +38,8 @@ const userSchema = new mongoose.Schema(
     },
     phone: [String],
     address: [String],
-    code: String,
     passwordChangeAt: Date,
+    code: String,
   },
   {
     timestamps: true,
