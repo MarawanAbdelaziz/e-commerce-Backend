@@ -2,7 +2,7 @@ import userModel from "../../../DB/models/userModel.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import asyncHandler from "../../middleware/asyncHandler.js";
-import sendMail, { htmlEmailVerify } from "../../services/sendEmail.js";
+import { htmlEmailVerify, sendMail } from "../../services/sendEmail.js";
 import { customAlphabet } from "nanoid";
 
 //================================= register =======================================//

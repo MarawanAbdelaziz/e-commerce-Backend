@@ -8,7 +8,7 @@ export const createOrder = {
       quantity: joi.number().integer(),
       phone: joi.string().required(),
       address: joi.string().required(),
-      couponCode: joi.string().min(3),
+      couponCode: joi.string().min(3).allow(""),
       paymentMethod: joi.string().valid("card", "cash").required(),
     })
     .required(),

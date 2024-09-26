@@ -6,6 +6,7 @@ import brandModel from "../../../DB/models/brandModel.js";
 import subCategoryModel from "../../../DB/models/subGategoryModel.js";
 import fs from "fs";
 import cloudinary from "../../utils/cloudinary.js";
+import { ApiFeatures } from "../../utils/apiFeatures.js";
 
 export const addProduct = asyncHandler(async (req, res, next) => {
   const { name, discount, price } = req.body;
@@ -55,7 +56,7 @@ export const addProduct = asyncHandler(async (req, res, next) => {
     req.body.images = images;
   }
 
-  req.body.subPrice = price - price * ((discount || 0) / 100)
+  req.body.subPrice = price - price * ((discount || 0) / 100);
 
   const product = await productModel.create(req.body);
 
@@ -63,15 +64,26 @@ export const addProduct = asyncHandler(async (req, res, next) => {
 });
 
 export const getAllProducts = asyncHandler(async (req, res, next) => {
-  const products = await productModel
-    .find()
-    .populate("category")
-    .populate("brand")
-    .populate("subCategory");
+  const apiFeatures = new ApiFeatures(
+    productModel
+      .find()
+      .populate("category")
+      .populate("brand")
+      .populate("subCategory"),
+    req.query
+  )
+    .pagination()
+    .filter()
+    .search()
+    .select()
+    .sort();
+
+  const products = await apiFeatures.mongooseQuery;
+
   if (products.length == 0) {
     return next(new Error("there is no products"), { cause: 404 });
   }
-  res.json({ products });
+  res.json({ page: apiFeatures.page, products });
 });
 
 export const getProduct = asyncHandler(async (req, res, next) => {

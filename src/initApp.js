@@ -1,6 +1,8 @@
 import connectDB from "../DB/DBConnection.js";
 import cors from "cors";
 import * as R from "./modules/index.routes.js";
+import { deleteFromCloudinary } from "./utils/deleteFromCloudinary.js";
+import { deleteFromDB } from "./utils/deleteFromDB.js";
 
 const initApp = (app, express) => {
   app.use(cors());
@@ -20,6 +22,8 @@ const initApp = (app, express) => {
   app.use("*", (req, res, next) => {
     next(new Error(`inValid url: ${req.originalUrl}`, { cause: 404 }));
   });
+
+  app.use(deleteFromCloudinary, deleteFromDB);
 
   app.use((error, req, res, next) =>
     res

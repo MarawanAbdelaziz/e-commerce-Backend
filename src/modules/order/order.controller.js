@@ -3,6 +3,8 @@ import couponModel from "../../../DB/models/couponModel.js";
 import orderModel from "../../../DB/models/orderModel.js";
 import productModel from "../../../DB/models/productModel.js";
 import asyncHandler from "../../middleware/asyncHandler.js";
+import { sendEmailPDF } from "../../services/sendEmail.js";
+import { createInvoice } from "../../utils/pdf.js";
 
 //=================================== createOrder ===================================//
 
@@ -112,6 +114,31 @@ export const createOrder = asyncHandler(async (req, res, next) => {
       }
     );
   }
+
+  const invoice = {
+    shipping: {
+      name: req.user.name,
+      address: req.user.address,
+      city: "San Francisco",
+      state: "CA",
+      country: "US",
+      postal_code: 94111,
+    },
+    items: order.products,
+    subtotal: subPrice * 100,
+    paid: order.totalPrice * 100,
+    invoice_nr: order._id,
+    date: order.createdAt,
+    coupon: req?.body?.coupon?.amount,
+  };
+  await createInvoice(invoice, "invoice.pdf");
+
+  await sendEmailPDF(req.user.email, "invoice.pdf", "invoice", [
+    {
+      path: "invoice.pdf",
+      contentType: "application/pdf",
+    },
+  ]);
 
   res.status(201).json({ message: "done", order });
 });
